@@ -1,0 +1,29 @@
+{
+    "name": "nodejs-express",
+    "version": "1.0.0",
+    "description": "First Express.js App",
+    "main": "node index.js",
+    "scripts": {
+        "test": "node index.js",
+        "start": "node index.js"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+ssh://git@bitbucket.org/pratyusha_cloud/pratyusha_cloud.git"
+    },
+    "keywords": [
+        "git"
+    ],
+    "author": "thamminenip1",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://bitbucket.org/pratyusha_cloud/pratyusha_cloud/issues"
+    },
+    "homepage": "https://bitbucket.org/pratyusha_cloud/pratyusha_cloud#readme",
+    "dependencies": {
+        "cors": "^2.8.5",
+        "express": "^4.17.3",
+        "mongodb": "^4.4.1",
+        "socket.io": "^2.3.0"
+    }
+}
