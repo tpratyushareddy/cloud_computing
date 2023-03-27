@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>CCA-Testing Page By Pratyusha</title>
+        <script src="https://udayton-cloud.bitbucket.io/clock.js"></script>
+        <script src="https://code.jquery.com/jquery-3.5.1.min.js" crossorigin = "anonymous"></script>
+        <link rel = "stylesheet" href = https://udayton-cloud.bitbucket.io/style1.css>
+        <style>
+            .button {
+                background-color: #4CAF50;
+                border: none;
+                color: white;
+                padding: 5px;
+                text-align: center;
+                text-decoration: none;
+                display: inline-block;
+                margin: 4px 2px;
+                cursor: pointer;
+            }
+            .round {border-radius: 8px;}
+            #response {background-color: #ff9800;}
+        </style>
+
+    </head>
+    <body>
+        <div class = "container wrapper">
+            <div id="top">
+                <h1>Testing Webpage for cloud computing and its applications</h1>
+                <h2>By Pratyusha Reddy Thammineni</h2>
+                <h3>IN LAB4 Repo</h3>
+            </div>
+            <div class = "wrapper">
+                <div id="menubar">
+                    <div id="email" onclick="showhideEmail()">Show my Email</div>
+                    <script src = "email.js"></script>
+                </div>
+                <div id = "main">
+                    <p>Demo Html Page.</p>
+                    <div id="digit-clock"></div>
+                    <script>
+                    function displayTime(){
+                        document.getElementById('digit-clock').innerHTML = "Current time: " + new Date();
+                    }
+                    setInterval(displayTime, 500);
+                    </script>
+                    <canvas id="analog-clock" width="150" height="150" style="background-color: #999;"></canvas>
+                    <script>
+                    var canvas = document.getElementById("analog-clock");
+                    var ctx = canvas.getContext("2d");
+                    var radius = canvas.height / 2;
+                    ctx.translate(radius, radius);
+                    radius = radius * 0.90
+                    setInterval(drawClock, 1000);
+                    
+                    function drawClock(){
+                        drawFace(ctx, radius);
+                        drawNumbers(ctx, radius);
+                        drawTime(ctx, radius);
+                    }
+                    </script>
+                     <div id="mydiv" 
+                     onclick="document.getElementById('mydiv').innerHTML= 'Clicked time: ' + Date()">To view current Time 
+                    </div>
+                    <br>
+                    <form action="echo.php" method="POST">
+                        Your Input: <input name="data" onkeyup="console.log('You have Pressed a key')" id ="data">
+                        <input type="button" value="Submit" onclick="getEcho()">
+                    </form>
+                    <div id = "response">
+                        "Response from server "
+                        <!--?php
+                             echo htmlentities($_REQUEST["data"]);
+                        ?-->
+                    </div>
+                    <script>
+                    function getEcho() {
+                        var input = document.getElementById("data").value;
+                        if (input.length == 0){
+                            return;
+                        }
+                        var xhttp = new XMLHttpRequest();
+                        xhttp.onreadystatechange = function () {
+                            if (this.readyState == 4 && this.status == 200){
+                                console.log("Received data="+xhttp.responseText);
+                                document.getElementById("response").innerText="Response from the server:" + xhttp.responseText;
+                            }
+                        }
+                        xhttp.open("GET", "echo.php?data=" + input, true);
+                        xhttp.send();
+                        document.getElementById("data").value="";
+                    }
+                    </script>
+                    <input class = "button round" type="button" value = "Ajax Echo" onclick = "getEcho()">
+                    <input class = "button round" type="button" value = "jQuery Ajax GET" onclick = "jQueryAjax()">
+                    <input class = "button round" type="button" value = "jQuery Ajax POST" onclick = "jQueryAjaxPost()">
+                    <script>
+                     function jQueryAjax(){
+                         var input = $("#data").val();
+                         if (input.length ==0) return;
+                         $.get("echo.php?data="+input,function(result){
+                             $("#response").html("response from the server:"+ result);
+                         }
+                         );
+                         $("#data").val("");
+                        }
+                        function jQueryAjaxPost(){
+                         var input = $("#data").val();
+                         if (input.length ==0) return;
+                         $.post("echo.php",
+                                {data: input},
+                                function( result ) {
+                                    $("#response").html("response from the server:"+ result);}
+                                );
+                         $("#data").val("");
+                        }
+                    </script>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
