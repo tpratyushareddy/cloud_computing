@@ -1,0 +1,260 @@
+<html>
+<head>
+  <link rel="stylesheet" href="css/style.css">
+  <link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="/socket.io/socket.io.js"></script>
+  <title>Sign in</title>
+  <style>
+      body {
+        background-color: #bcf3d8;
+        font-family: 'Ubuntu', sans-serif;
+    }
+    
+    .main {
+        background-color: #FFFFFF;
+        width: 400px;
+        height: 400px;
+        margin: 7em auto;
+        border-radius: 1.5em;
+        box-shadow: 0px 11px 35px 2px rgba(0, 0, 0, 0.14);
+    }
+
+    .main1 {
+        background-color: #FFFFFF;
+        width: 400px;
+        height: 480px;
+        margin: 7em auto;
+        border-radius: 1.5em;
+        box-shadow: 0px 11px 35px 2px rgba(0, 0, 0, 0.14);
+    }
+    
+    .sign {
+        padding-top: 40px;
+        color: #55aa8e;
+        font-family: 'Ubuntu', sans-serif;
+        font-weight: bold;
+        font-size: 23px;
+    }
+    
+    .un {
+    width: 76%;
+    color: rgb(38, 50, 56);
+    font-weight: 700;
+    font-size: 14px;
+    letter-spacing: 1px;
+    background: rgba(136, 126, 126, 0.04);
+    padding: 10px 20px;
+    border: none;
+    border-radius: 20px;
+    outline: none;
+    box-sizing: border-box;
+    border: 2px solid rgba(0, 0, 0, 0.02);
+    margin-bottom: 50px;
+    margin-left: 46px;
+    text-align: center;
+    margin-bottom: 27px;
+    font-family: 'Ubuntu', sans-serif;
+    }
+    
+    form.form1 {
+        padding-top: 40px;
+    }
+    
+    .pass {
+            width: 76%;
+    color: rgb(38, 50, 56);
+    font-weight: 700;
+    font-size: 14px;
+    letter-spacing: 1px;
+    background: rgba(136, 126, 126, 0.04);
+    padding: 10px 20px;
+    border: none;
+    border-radius: 20px;
+    outline: none;
+    box-sizing: border-box;
+    border: 2px solid rgba(0, 0, 0, 0.02);
+    margin-bottom: 50px;
+    margin-left: 46px;
+    text-align: center;
+    margin-bottom: 27px;
+    font-family: 'Ubuntu', sans-serif;
+    }
+    
+   
+    .un:focus, .pass:focus {
+        border: 2px solid rgba(0, 0, 0, 0.18) !important;
+        
+    }
+    
+    .submit {
+      cursor: pointer;
+        border-radius: 5em;
+        color: #fff;
+        background: linear-gradient(to right, #27b06c, #a4fb40);
+        border: 0;
+        padding-left: 40px;
+        padding-right: 40px;
+        padding-bottom: 10px;
+        padding-top: 10px;
+        font-family: 'Ubuntu', sans-serif;
+        margin-left: 35%;
+        font-size: 13px;
+        box-shadow: 0 0 20px 1px rgba(0, 0, 0, 0.04);
+    }
+    
+    .forgot {
+        text-shadow: 0px 0px 3px rgba(117, 117, 117, 0.12);
+        color: #E1BEE7;
+        padding-top: 15px;
+    }
+    
+    a {
+        text-shadow: 0px 0px 3px rgba(117, 117, 117, 0.12);
+        color: #457e04;
+        text-decoration: none
+    }
+    
+    @media (max-width: 600px) {
+        .main {
+            border-radius: 0px;
+        }
+        
+        
+
+  </style>
+</head>
+<body onload="hideRegister()">
+        <div class="signup">
+        <div class="main1">
+            <p class="sign" align = "center">SignUp</h3>
+            <form class="form1" method="POST" action="/signup"> 
+                <input class="un " type="text" name="reg_username" id="reg_username" placeholder="Username"><br/>
+                <input class="pass" type="password" name="reg_password" id="reg_password" placeholder="Password"><br/>
+                <input class="un " type="text" name="fullname" id="fullname" placeholder="Full Name"><br/>
+                <input class="un " type="text" name="email" id="email" placeholder="Email"><br/>
+                <input class="submit" type="button" onclick="signup()" value="submit">
+                <p class="loginText" align="center" style="text-shadow: 0px 0px 3px rgba(117, 117, 117, 0.12)";"color: #E1BEE7 "; "padding-top: 15px;"><a href="#">Now Login !</p>
+                </form>
+        </div>
+    </div>
+  <div class="main login">
+    <p class="sign" align="center">Login In</p>
+    <form class="form1" method="POST" action="/login">
+      <input class="un "id="username" type="text" align="center" placeholder="Username">
+      <input class="pass" id="password" type="password" align="center" placeholder="Password">
+      <button class="submit" onclick="login(); return false;" align="center">Sign in</button>
+      <p class="signupText" align="center" style="text-shadow: 0px 0px 3px rgba(117, 117, 117, 0.12)";"color: #E1BEE7 "; "padding-top: 15px;"><a href="#">Create a new account !</p>
+        
+    </form>      
+    </div>
+    <script type="text/javascript">
+        socketio =io();
+        function hideRegister(){
+                $(".signup").hide();
+            }
+            $(".loginText ").click(function(){
+                console.log('login')
+                    $(".signup").hide();
+                    $(".login").show();
+            });
+            $(".signupText ").click(function(){
+                    console.log('signup')
+                    $(".signup").show();
+                    $(".login").hide();
+            });
+            /* function signup(){
+                username=document.getElementById('reg_username').value;
+                password=document.getElementById('reg_password').value;
+                email=document.getElementById('email').value;
+                fullname=document.getElementById('fullname').value;
+                data={
+                    "reg_username":username,
+                    "reg_password":password,
+                    "email":email,
+                    "fullname":fullname
+                }
+                console.log(data)                
+                $.post('https://webchatp1.herokuapp.com/signup',data,result=>{
+                    console.log(result)
+                });
+                
+            }
+        function login(){
+                username=document.getElementById('username').value;
+                password=document.getElementById('password').value;
+                data={
+                    "username":username,
+                    "password":password
+                }
+                console.log(data)
+                $.post('https://webchatp1.herokuapp.com/login',data,result=>{
+                    console.log(result);
+                    if(result.status == 200){
+                        location.href = "/static/chatclient/index.html";
+                    }else{
+                        alert("Indvalid Credentials");
+                    }                    
+                    
+                });
+            } */
+            function login(){
+                var data = {
+                    "username":document.getElementById("username").value,
+                    "password":document.getElementById("password").value
+                    }
+                    document.getElementById("username").value="";
+                    document.getElementById("password").value="";
+                    socketio.emit("login",data);
+/*                     
+                    isAuthenticated = true;
+                    $.post("https://webchatp1.herokuapp.com/login",
+                    data,
+                    function(res){
+                        console.log(res);
+                        if(res.code == 200){
+                            console.log(res);
+                            alert(res.message);
+                            $("#main").show();
+                            $(".auth").hide();
+                            }else{
+                                alert("Invalid Credentials")
+                                }                  */
+                    
+ /* }) */
+
+}
+
+socketio.on("loginsuccess",data=>{
+    console.log(data)
+    if(data.code == 200){
+        location.href = "/static/chatclient/index.html" ;
+    }
+
+})
+function signup(){
+var data = {
+    "username":document.getElementById("s_username").value,
+    "password":document.getElementById("s_password").value,
+    "fullName":document.getElementById("s_name").value,
+    "email":document.getElementById("s_email").value
+}
+document.getElementById("s_username").value="";
+document.getElementById("s_password").value="";
+document.getElementById("s_name").value="";
+document.getElementById("s_email").value="";
+
+console.log(data)
+$.post("https://authenticationapi.herokuapp.com/signup",
+ data,
+ function(res){
+    console.log(res);
+    alert(res.message);
+    toogleLogin();
+ })
+}
+</script>
+    </script>
+</body>
+</html>

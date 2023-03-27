@@ -1,0 +1,72 @@
+image: atlassian/default-image:3
+
+pipelines:
+  pull-requests:
+    feature/*: #any branch with a feature prefix 
+      - step:
+          name: 'Deployment to Staging'
+          deployment: staging
+          services: 
+            - docker
+          script:
+            - echo "Staging deployment script by thamminenip1@udayton.edu"
+            - echo $HEROKU_API_KEY
+            - curl https://cli-assets.heroku.com/install-ubuntu.sh | sh
+            - heroku container:login
+            - heroku container:push web -a $STAGING_APP
+            - heroku container:release web -a $STAGING_APP
+              # push and build docker image
+
+  branches:
+    feature/*: #any branch with a feature prefix 
+      - step:
+          name: 'prepare for Deployment to testing'
+          script:
+            - echo "Ready for testing deployment script by thamminenip1@udayton.edu"
+      - step:
+          name: 'Deployment to testing'
+          trigger: 'manual'
+          services: 
+            - docker
+          script:
+            - echo "Staging deployment script by thamminenip1@udayton.edu"
+            - echo $HEROKU_API_KEY
+            - curl https://cli-assets.heroku.com/install-ubuntu.sh | sh
+            - heroku container:login
+            - heroku container:push web -a $STAGING_APP
+            - heroku container:release web -a $STAGING_APP
+              # push and build docker image
+    staging: 
+      - step:
+          name: 'Deployment to Staging'
+          deployment: staging
+          services: 
+            - docker
+          script:
+            - echo "Staging deployment script by thamminenip1@udayton.edu"
+            - echo $HEROKU_API_KEY
+            - curl https://cli-assets.heroku.com/install-ubuntu.sh | sh
+            - heroku container:login
+            - heroku container:push web -a $STAGING_APP
+            - heroku container:release web -a $STAGING_APP
+              # push and build docker image
+
+    master:
+      - step:
+          name: 'Prepare for Production Deployment'
+          script:
+            - echo "Ready for Production deployment script by thamminenip1@udayton.edu"
+      - step:
+          name: 'Deployment to Production'
+          deployment: production
+          trigger: 'manual'
+
+          services:
+            - docker
+          script:
+            - echo "Production deployment script by thamminenip1@udayton.edu"
+            - echo $HEROKU_API_KEY
+            - curl https://cli-assets.heroku.com/install-ubuntu.sh | sh
+            - heroku container:login
+            - heroku container:push web -a $PRODUCTION
+            - heroku container:release web -a $PRODUCTION
