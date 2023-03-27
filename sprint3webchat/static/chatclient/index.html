@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Cloud Test Page for Team 12</title>
+        <link rel="stylesheet" href="https://udayton-cloud.bitbucket.io/chatbox.css">
+        <link rel="stylesheet" href="https://udayton-cloud.bitbucket.io/style1.css">
+        <script src="https://udayton-cloud.bitbucket.io/clock.js"></script>
+        
+        <script src="https://code.jquery.com/jquery-3.5.1.min.js" crossorigin="anonymous"></script>
+        <script src="./socket.io/socket.io.js"></script>
+        
+        <style>
+             input[type='text'],input[type='password'],input[type='email']{
+                margin-top: 5px;
+              }
+             .titleText{
+                text-align: center;
+              }
+             .signup,.login{
+                 width:fit-content;
+                 margin:0 auto;
+                 text-align: center;
+             }
+             .signupText,.loginText{
+                cursor: pointer;
+                text-decoration: underline;
+                font-size: 12px;
+                margin-top: 5px;
+                color:#4CAF50;
+             }
+             .button1{
+                width: 100%;
+                margin-top: 10px;
+                border: 1px #ccc;
+                background-color: #4CAF50;
+             }
+             .signup,.login{
+                 width:fit-content;
+                 margin:0 auto;
+             }
+             .signupText,.loginText{
+                 cursor: pointer;
+             }
+            .button {
+                background-color: #4CAF50;
+                border:none;
+                color:white;
+                padding:5px;
+                text-align: center;
+                text-decoration: none;
+                display:inline-block;
+                font-size:12px;
+                margin:4px 2px;
+                cursor: pointer;
+            }
+            .online-users{
+                display:block;
+                position:relative;
+                min-height: 100px;
+                overflow: auto;
+                border:1px solid #ccc;
+
+            }
+            .usernameTitle{
+                /* background: #4CAF50; */
+                color:black;
+                border-radius:3px;
+                text-align: center;
+            }
+            .username{
+                background: #4CAF50;
+                color:white;
+                border-radius:3px;
+                /* text-align: center; */
+            }
+            .round{
+                border-radius:8px;
+            }
+            #response{
+                background-color:#ff9800;
+            }
+            body {
+              background-color: #bcf3d8;
+              font-family: 'Ubuntu', sans-serif;
+          }
+          .signup{
+              display:none;
+          }
+          
+          .main {
+              background-color: #FFFFFF;
+              width: 400px;
+              height: 400px;
+              margin: 7em auto;
+              border-radius: 1.5em;
+              box-shadow: 0px 11px 35px 2px rgba(0, 0, 0, 0.14);
+          }
+      
+          .main1 {
+              background-color: #FFFFFF;
+              width: 400px;
+              height: 480px;
+              margin: 7em auto;
+              border-radius: 1.5em;
+              box-shadow: 0px 11px 35px 2px rgba(0, 0, 0, 0.14);
+          }
+          
+          .sign {
+              padding-top: 40px;
+              color: #55aa8e;
+              font-family: 'Ubuntu', sans-serif;
+              font-weight: bold;
+              font-size: 23px;
+          }
+          
+          .un {
+          width: 76%;
+          color: rgb(38, 50, 56);
+          font-weight: 700;
+          font-size: 14px;
+          letter-spacing: 1px;
+          background: rgba(136, 126, 126, 0.04);
+          padding: 10px 20px;
+          border: none;
+          border-radius: 20px;
+          outline: none;
+          box-sizing: border-box;
+          border: 2px solid rgba(0, 0, 0, 0.02);
+          margin-bottom: 50px;
+          margin-left: 10px;
+          text-align: center;
+          margin-bottom: 27px;
+          font-family: 'Ubuntu', sans-serif;
+          }
+          
+          form.form1 {
+              padding-top: 40px;
+          }
+          
+          .pass {
+                  width: 76%;
+          color: rgb(38, 50, 56);
+          font-weight: 700;
+          font-size: 14px;
+          letter-spacing: 1px;
+          background: rgba(136, 126, 126, 0.04);
+          padding: 10px 20px;
+          border: none;
+          border-radius: 20px;
+          outline: none;
+          box-sizing: border-box;
+          border: 2px solid rgba(0, 0, 0, 0.02);
+          margin-bottom: 50px;
+          margin-left: 10px;
+          text-align: center;
+          margin-bottom: 27px;
+          font-family: 'Ubuntu', sans-serif;
+          }
+          
+         
+          .un:focus, .pass:focus {
+              border: 2px solid rgba(0, 0, 0, 0.18) !important;
+              
+          }
+          
+          .submit {
+            cursor: pointer;
+              border-radius: 5em;
+              color: #fff;
+              background: linear-gradient(to right, #27b06c, #a4fb40);
+              border: 0;
+              padding-left: 40px;
+              padding-right: 40px;
+              padding-bottom: 10px;
+              padding-top: 10px;
+              font-family: 'Ubuntu', sans-serif;
+              margin-left: 5%;
+              font-size: 13px;
+              box-shadow: 0 0 20px 1px rgba(0, 0, 0, 0.04);
+          }
+          
+          .forgot {
+              text-shadow: 0px 0px 3px rgba(117, 117, 117, 0.12);
+              color: #E1BEE7;
+              padding-top: 15px;
+          }
+          
+          a {
+              text-shadow: 0px 0px 3px rgba(117, 117, 117, 0.12);
+              color: #457e04;
+              text-decoration: none
+          }
+          
+          @media (max-width: 600px) {
+              .main {
+                  border-radius: 0px;
+              }
+          }
+        </style>
+    
+    </head>
+    <body onload="hideRegister()">
+        <div class="container wrapper">
+            <div id="top">
+                <h1>WebChat Application !</h1>
+                <h2>By Team 12</h2>
+                
+                <div id="digit-clock"></div><br>
+                <div id="email" onclick="showhideEmail()">Contact the Adminstrator</div>
+                <div id="emailbh" onclick="showhideEmailbh()">Contact the Adminstrator-2</div>
+
+                <script>
+                    var shown = false;
+function showhideEmail(){
+    if(shown){
+        document.getElementById('email').innerHTML = "Contact the Adminstrator";
+        shown = false;
+    }else{
+        var myemail = "<a href= 'mailto: thamminenip1"+ "@" + "udayton.edu'>thamminenip1" + "@" +"udayton.edu</a>";
+        document.getElementById('email').innerHTML= myemail;
+        shown = true;
+    }
+}
+function showhideEmailbh(){
+    if(shown){
+        document.getElementById('emailbh').innerHTML = "Contact the Adminstrator2";
+        shown = false;
+    }else{
+        var myemailbh = "<a href= 'mailto: tallapanenib1"+ "@" + "udayton.edu'>tallapanenib1" + "@" +"udayton.edu</a>";
+        document.getElementById('emailbh').innerHTML= myemailbh;
+        shown = true;
+    }
+}
+$(document).ready(function(){
+
+        $("#sidebar-user-box").click(function(){
+            console.log("hai");
+            var className = $("#sidebar-user-box").attr("class");
+            alert(className); // Outputs: hint
+        });
+    });
+                </script>
+            </div>
+            <div id="wrapper">
+                <div id="menubar">
+                    <br>
+                    <canvas id="analog-clock" width="150" height="150" style="background-color:#999"></canvas>
+                    
+                    <br>
+                </div>
+            </div>
+            <div id="main">
+                
+                <div class="main1">
+                    <div id="signup" class="signup">
+                        <br>        
+                    <h3 >SignUp</h3>
+                            <form class="form1" method="POST" action="/signup">
+                            <input class="un " type="text" name="reg_username" id="reg_username" placeholder="Username"><br/>
+                            <input class="pass" type="password" name="reg_password" id="reg_password" placeholder="Password"><br/>
+                            <input class="un " type="text" name="fullname" id="fullname" placeholder="Full Name"><br/>
+                            <input class="un " type="email" name="email" id="email1" placeholder="Email"><br/>
+                            <input class="submit" type="button" onclick="signup()" value="submit"><br>
+                            <span class="loginText"align="center" style="text-shadow: 0px 0px 3px rgba(117, 117, 117, 0.12)";"color: #E1BEE7 "; "padding-top: 15px;"><a href="#">Now Login !</a>
+                            </form>
+                            
+                        </div>
+                        <div class="main1 login">
+                            <p class="sign" align="center">Login In</p>
+                                <form class="form1" method="POST" action="/login">
+                                <input class="un " type="text" name="username" id="username" placeholder="Username"><br/>
+                                <input class="pass"type="password" name="password" id="password" placeholder="Password"><br/>
+                                <button class="submit" onclick="login(); return false;" align="center">Sign in</button><br>
+                              <p class="signupText" align="center" style="text-shadow: 0px 0px 3px rgba(117, 117, 117, 0.12)";"color: #E1BEE7 "; "padding-top: 15px;"><a href="#">Create a new account !</a></p>
+ 
+                                </form>       
+                       
+                        
+                        
+                    </div>                        
+                
+                <div class="chatApplication"><br>
+                    <h2 style="text-align: center;">Public Chat</h2>                    
+                    <br>
+                    <div id="online" style="text-align: center;">Number Of Online chatters : <span id="onlinecount"></span></div><br>
+                    Message: <div id="response" style="padding-left: 10%;">
+                        
+                    </div>
+                    <br>
+                    Chat Message:<input name="data" onkeypress="checkEnter(event)" onkeyup="socketio.emit('typing')" id="data">
+                    <input type="button" class="button round" value="Send" onclick="send()"><br>
+                    <div id="typing"></div><br>
+                    
+                    <div id="response"></div>            
+                </div>
+            </div>
+        </div>
+        </div>
+        </div>
+        <script src="https://bitbucket.org/cca-thamminenip1-tallapanenib1/cca-thamminenip1-tallapanenib1.bitbucket.io/raw/93c6a298a0872adbda69387370e7f99752c39bf5/chatbox.js"></script>
+        
+     <script>
+        
+        var socketio= io();
+        function checkEnter(event){
+            if(event.keyCode == 13){
+                send();
+            }
+        }
+        function requestChatHistory(receiver){
+            socketio.emit("requestChatHistory",receiver);
+            console.log(receiver);
+        }
+
+        function send(){
+        
+            var input= $("#data").val();
+            if(input.length ==0) return;
+            socketio.emit("message",input);
+            $("#data").val('');
+
+
+        }
+        
+        function sendPrivateChat(receiver,msg){
+            socketio.emit('newPrivateMsg',{receiver:receiver,msg:msg})
+        }
+        socketio.on("newIncomingMsg",data=>{
+            // renderChatbox(data.sender, data.sender)
+            displayFriendMessage(data.sender, data.msg)
+        })
+        socketio.on("chatbotmessage",data=>{
+            console.log(data)
+           displayFriendMessage('chatbot', data) 
+        })
+        socketio.on("sendChatHistory",chathistoryinfo=>{
+            console.log(chathistoryinfo)
+            let chathistory = chathistoryinfo.chat
+            let username = chathistoryinfo.otheruser
+            for(let idx in chathistory){
+                chat = chathistory[idx];
+                //TODO: validate, debug to ensure you get what you expected!!
+                if(chat.sender==username){ //Friend message
+                    displayFriendMessage(chat.sender,chat.message);
+                }else { //Your message
+                    displaySelfMessage(chat.receiver,chat.message);
+                }
+            }
+        })
+        socketio.on("messagereceived",(data)=>{
+            $("#response").append(data+"<br>");
+        });
+        
+        socketio.on("typing",(data)=>{
+            $("#typing").html(data);
+            setTimeout(()=>{$("#typing").html("<br>")},500);
+        });
+        
+
+        socketio.on('signedup',(response) => {
+            // console.log(response);
+            if(response['code']==200){
+                            $(".signup").hide();
+                            $(".chatApplication").hide();
+                            $(".login").show();
+                        }else{
+                            alert(data.message);
+                        }
+        })
+        socketio.on('signuperror',data=>{
+            alert(" error");
+        })
+
+        socketio.on('loginsuccess', (data) => {
+                $(".login").hide();
+                $('.chatApplication').show();
+                setCurrentUser({username:data.username,fullname:data.fullname})
+                
+        });
+
+        socketio.on('updatedUsers', (onlineUsers) => {
+
+            console.log(onlineUsers);
+            displayUserList(onlineUsers)
+            $('#onlinecount').html(onlineUsers.length)
+            for(var i = 0;i<onlineUsers.length;i++ ){
+                socketio.emit('requestChatHistory',onlineUsers[i].username)
+            }
+            
+        });
+        socketio.on('loginfail', (data) => {
+                alert('Login failed');
+
+        });
+
+        socketio.on('loginerror', (data) => {
+            alert('Login server error');
+
+        });
+
+        function hideRegister(){
+                $(".signup").hide();
+                $(".chatApplication").hide();
+            }
+            $(".loginText").click(function(){
+                
+                    $(".signup").hide();
+                    $(".login").show();
+            });
+            $(".signupText").click(function(){
+                // console.log('signup')
+                    $(".signup").show();
+                    $(".login").hide();
+            });
+            function signup(){
+                let username=document.getElementById('reg_username').value;
+                let password=document.getElementById('reg_password').value;
+                let email=document.getElementById('email1').value;
+                let fullname=document.getElementById('fullname').value;
+                document.getElementById('reg_username').value="";
+                document.getElementById('reg_password').value="";
+                document.getElementById('email1').value="";
+                document.getElementById('fullname').value="";
+                let data={
+                    "username":username,
+                    "password":password,
+                    "email":email,
+                    "fullName":fullname
+                };
+                // console.log(document.getElementById('email1').value);
+                if(data.username.length!=0 && data.password.length!=0 && data.fullName.length!=0 && data.email.length!=0) {
+                    socketio.emit('signup',data);
+                        
+                }else{
+                    alert("Enter valid credentials")
+                }
+        }
+            function Logout(){
+                $(".signup").hide();
+                $(".chatApplication").hide();
+                $(".login").show();
+            }
+            function login(){                
+                let username=document.getElementById('username').value;
+                let password=document.getElementById('password').value;
+                document.getElementById('password').value="";
+                document.getElementById('username').value="";
+                let data={
+                    "username":username,
+                    "password":password
+                }
+                if(data.username.length!=0 && data.password.length!=0){
+                    socketio.emit('login', data);   
+                }else{
+                    alert("Enter valid credentials");
+                }
+            }
+        
+            function displayTime(){
+                document.getElementById('digit-clock').innerHTML="Current time"+ new Date();
+            }
+            setInterval(displayTime,500);
+        var canvas =document.getElementById("analog-clock");
+        var ctx=canvas.getContext("2d");
+        var radius=canvas.height / 2;
+        ctx.translate(radius,radius);
+        radius=radius * 0.90;
+        setInterval(drawClock,1000);
+        function drawClock(){
+            drawFace(ctx,radius);
+            drawNumbers(ctx,radius);
+            drawTime(ctx,radius);
+        }
+        // const element = document.getElementById("sidebar-user-box");
+        // element.addEventListener("click", myFunction);
+        // element.myParam=document.getElementByClassName()
+        </script>
+        </body>
+</html>
